@@ -7,11 +7,10 @@ public class GameplayController : MonoBehaviour
     [Header("References")]
     public CameraController gameCamera;
     public LevelManager levelManager; 
+    public GridController gridController;
 
     public bool IsInitialized { get; private set; }
     public bool IsActive { get; private set; }
-
-    public UpgradesController UpgradesController { get; private set; }
 
     public int TotalCurrencyReward
     {
@@ -22,12 +21,9 @@ public class GameplayController : MonoBehaviour
 
     public void Initialize()
     {
-        UpgradesController = new UpgradesController();
-        UpgradesController.OnItemUpgraded += UpgradesController_OnItemUpgraded;
-
         levelManager.Initialize();
         gameCamera.Initialize();
-
+        gridController.Initialize();
         IsInitialized = true;
     }
 
@@ -57,26 +53,5 @@ public class GameplayController : MonoBehaviour
     {
         if (!IsActive)
             return;
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            FinishGameplay(true);
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            FinishGameplay(false);
-        }
-    }
-
-    private void UpgradesController_OnItemUpgraded(UpgradeItemBase upgradeItem, int level)
-    {
-        if (upgradeItem is StartingLevelUpgrade)
-        {
-            
-        }
-        else if (upgradeItem is IncomeUpgrade)
-        {
-
-        }
     }
 }

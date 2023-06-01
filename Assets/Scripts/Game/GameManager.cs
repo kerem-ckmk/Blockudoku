@@ -109,18 +109,7 @@ public class GameManager : MonoBehaviour
 #else
         Application.targetFrameRate = 60;
 #endif
-
-        if (disableRemoteConfig == false && GameConfigs.Instance.IsRemoteConfigApplied == false)
-            ApplyRemoteConfig();
-
         gameplayController.Initialize();
-    }
-
-    private void ApplyRemoteConfig()
-    {
-        gameConfigs.ApplyRemoteConfig();
-
-        //Apply other Remote Config values here
     }
 
     public void ResetSaveData()
@@ -198,22 +187,6 @@ public class GameManager : MonoBehaviour
         {
             AddCurrency(GameConfigs.Instance.AddCurrencyCheatAmount);
         }
-    }
-
-    public bool TryUpgradeItem(UpgradeItemBase upgradeItem)
-    {
-        if (PlayerCurrencyAmount >= upgradeItem.Price)
-        {
-            AddCurrency(-upgradeItem.Price);
-
-            upgradeItem.ApplyUpgradeOneLevel();
-
-            DoHaptic(HapticPatterns.PresetType.MediumImpact, true);
-
-            return true;
-        }
-
-        return false;
     }
 
     public static void DoHaptic(HapticPatterns.PresetType hapticType, bool dominate = false)

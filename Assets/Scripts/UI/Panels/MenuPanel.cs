@@ -7,7 +7,6 @@ public class MenuPanel : UIPanel
     public Button startButton;
     public Button settingsButton;
     public SettingsPopup settingsPopup;
-    public UpgradesPanel upgradesPanel;
 
     private void Awake()
     {
@@ -19,10 +18,6 @@ public class MenuPanel : UIPanel
     {
         base.OnInitialize();
 
-        upgradesPanel.Initialize(GameManager.Instance.gameplayController.UpgradesController);
-
-        GameManager.OnCurrencyChanged += GameManager_OnCurrencyChanged;
-
         settingsPopup.Initialize(GameManager);
         settingsPopup.HidePanel();
     }
@@ -30,10 +25,6 @@ public class MenuPanel : UIPanel
     protected override void OnShowPanel()
     {
         base.OnShowPanel();
-
-        GameManager_OnCurrencyChanged(GameManager.Instance.PlayerCurrencyAmount, 0, null);
-
-        upgradesPanel.UpdateUpgradeItems();
     }
 
     protected override void OnHidePanel()
@@ -49,10 +40,5 @@ public class MenuPanel : UIPanel
     private void SettingsButtonClicked()
     {
         settingsPopup.ShowPanel();
-    }
-
-    private void GameManager_OnCurrencyChanged(int totalCurrency, int changeAmount, Vector2? position)
-    {
-        upgradesPanel.MainPlayerCurrencyUpdated(totalCurrency);
     }
 }
