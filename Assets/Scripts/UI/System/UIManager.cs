@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
 
     [Header("References - Panels")]
     public LoadingPanel loadingPanel;
-    public MenuPanel menuPanel;
     public GameplayPanel gameplayPanel;
     public FinishSuccessPanel finishSuccessPanel;
     public FinishFailPanel finishFailPanel;
@@ -25,7 +24,6 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         allPanels.Add(loadingPanel);
-        allPanels.Add(menuPanel);
         allPanels.Add(gameplayPanel);
         allPanels.Add(finishSuccessPanel);
         allPanels.Add(finishFailPanel);
@@ -64,11 +62,11 @@ public class UIManager : MonoBehaviour
         {
             ShowPanel(loadingPanel);
         }
-        else if (newGameState == GameState.Menu)
-        {
-            OnMenuState();
-            ShowPanel(menuPanel);
-        }
+        //else if (newGameState == GameState.Menu)
+        //{
+        //    OnMenuState();
+        //    ShowPanel(menuPanel);
+        //}
         else if (newGameState == GameState.Gameplay)
         {
             ShowPanel(gameplayPanel);

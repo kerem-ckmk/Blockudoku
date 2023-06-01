@@ -8,11 +8,7 @@ public class MenuPanel : UIPanel
     public Button settingsButton;
     public SettingsPopup settingsPopup;
 
-    private void Awake()
-    {
-        startButton.onClick.AddListener(StartButtonClicked);
-        settingsButton.onClick.AddListener(SettingsButtonClicked);
-    }
+
 
     protected override void OnInitialize()
     {
@@ -30,11 +26,6 @@ public class MenuPanel : UIPanel
     protected override void OnHidePanel()
     {
         base.OnHidePanel();
-    }
-
-    private void StartButtonClicked()
-    {
-        GameManager.StartGameplay();
     }
 
     private void SettingsButtonClicked()

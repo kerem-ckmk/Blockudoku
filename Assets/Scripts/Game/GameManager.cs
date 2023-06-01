@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
     public void PrepareGameplay()
     {
         gameplayController.PrepareGameplay(LinearLevelIndex);
-        ChangeCurrentGameState(GameState.Menu);
+        StartGameplay();
     }
 
     public void StartGameplay()
@@ -219,7 +219,7 @@ public enum GameState
 {
     None,
     Loading,
-    Menu,
+   // Menu,
     Gameplay,
     FinishSuccess,
     FinishFail

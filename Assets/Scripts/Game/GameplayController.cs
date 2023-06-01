@@ -30,6 +30,7 @@ public class GameplayController : MonoBehaviour
     public void PrepareGameplay(int linearLevelIndex)
     {
         levelManager.CreateLevel(linearLevelIndex);
+        gridController.Prepare();
     }
 
     public void UnloadGameplay()
