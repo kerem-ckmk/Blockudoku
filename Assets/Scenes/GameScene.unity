@@ -2792,6 +2792,7 @@ MonoBehaviour:
   - {fileID: 1024166325}
   - {fileID: 572123259}
   - {fileID: 1752453986}
+  cameraUI: {fileID: 513704819}
 --- !u!4 &1173711285
 Transform:
   m_ObjectHideFlags: 0

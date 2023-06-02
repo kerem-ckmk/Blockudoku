@@ -6,6 +6,7 @@ public class TileManager : MonoBehaviour
 {
     public List<TileController> tilePrefabs;
     public List<Transform> tileTransforms;
+    public Camera cameraUI;
     public bool IsInitiailized { get; private set; }
     public List<TileController> ActiveTiles { get; private set; }
     public GridController GridController { get; private set; }
@@ -27,7 +28,20 @@ public class TileManager : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             var tile = CreateTileController(i);
+            tile.OnDestroyTile += Tile_OnDestroyTile;
             ActiveTiles.Add(tile);  
+        }
+    }
+
+    private void Tile_OnDestroyTile(TileController tileController)
+    {
+        ActiveTiles.Remove(tileController);
+        Destroy(tileController.gameObject);
+
+        if (ActiveTiles.Count == 0)
+        {
+            ActiveTiles.Clear();
+            SpawnTiles();
         }
     }
 
@@ -43,7 +57,7 @@ public class TileManager : MonoBehaviour
     {
         int random = Random.Range(0, tilePrefabs.Count);
         var tileControllerObject = Instantiate(tilePrefabs[random], tileTransforms[transformIndex]);
-        tileControllerObject.Initialize(GridController);
+        tileControllerObject.Initialize(GridController, cameraUI);
         return tileControllerObject;
     }
 

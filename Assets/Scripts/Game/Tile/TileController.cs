@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,9 +19,13 @@ public class TileController : MonoBehaviour
 
     private Vector3 _screenSpace;
     private Vector3 _offset;
+    private Camera _camera;
 
-    public void Initialize(GridController gridController)
+    public event Action<TileController> OnDestroyTile;
+
+    public void Initialize(GridController gridController, Camera camera)
     {
+        _camera = camera;
         GridController = gridController;
         CreateShape();
         IsInitialized = true;
@@ -72,17 +77,18 @@ public class TileController : MonoBehaviour
 
     public void OnMouseDown()
     {
-        _screenSpace = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0f, Camera.main.nearClipPlane));
-        _offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y - GameConfigs.Instance.TileMouseDragOffset, _screenSpace.z));
+        _screenSpace = _camera.WorldToScreenPoint(transform.position);
+        _offset = transform.position - _camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y - GameConfigs.Instance.TileMouseDragOffset, _screenSpace.z));
         transform.localScale *= GameConfigs.Instance.TileDragScale;
     }
 
     public void OnMouseDrag()
     {
         Vector3 curScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenSpace.z);
-        Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace) + _offset;
+        Vector3 curPosition = _camera.ScreenToWorldPoint(curScreenSpace) + _offset;
 
-        transform.position = Vector3.Lerp(transform.position, curPosition, Time.deltaTime * GameConfigs.Instance.TileDragSpeed);
+        transform.position = curPosition;
+        transform.SetLocalPositionZ(1f);
     }
 
     public void OnMouseUp()
@@ -108,7 +114,7 @@ public class TileController : MonoBehaviour
                 cell.SetFull(true);
             }
 
-            Destroy(gameObject);
+            OnDestroyTile?.Invoke(this);
         }
         else
         {
