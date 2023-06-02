@@ -114,12 +114,14 @@ public class TileController : MonoBehaviour
         {
             transform.localPosition = Vector3.zero;
         }
+
+        transform.localScale = Vector3.one;
     }
 
     private CellController GetCellUnderneath(Vector2 position)
     {
         RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up);
-        if (hit.collider != null)
+        if (hit.collider.GetComponent<CellController>())
         {
             CellController cell = hit.collider.GetComponent<CellController>();
             cell = cell.IsFull ? null : cell;
