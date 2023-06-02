@@ -15,6 +15,9 @@ public class GameConfigs : ScriptableObject
 
     [Header("Tile")]
     public float TileSize = 1f;
+    public float TileMouseDragOffset = 50f;
+    public float TileDragSpeed = 10f;
+    public float TileDragScale = 1.72f;
 
     [Header("Upgrades - Visuals")]
     public Sprite StartingLevelBackground;

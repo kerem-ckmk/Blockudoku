@@ -2782,6 +2782,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4552755a9554f345afe7011c1007e6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilePrefabs:
+  - {fileID: 2578458045667142448, guid: cedd8337bc9105f49b436bd955d4408b, type: 3}
+  - {fileID: 2578458045667142448, guid: d948cfa79aa474040b8ea2737eb87928, type: 3}
+  - {fileID: 2578458045667142448, guid: 914a79a82eb3b6547a6f465ba403505f, type: 3}
+  - {fileID: 2578458045667142448, guid: abce5f6100801554fa906c4c07bccb62, type: 3}
+  - {fileID: 2578458045667142448, guid: 401deb0b04407e644a3ac150e34c4655, type: 3}
+  tileTransforms:
+  - {fileID: 1024166325}
+  - {fileID: 572123259}
+  - {fileID: 1752453986}
 --- !u!4 &1173711285
 Transform:
   m_ObjectHideFlags: 0

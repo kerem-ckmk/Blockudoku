@@ -25,7 +25,7 @@ public class GameplayController : MonoBehaviour
         levelManager.Initialize();
         gameCamera.Initialize();
         gridController.Initialize();
-        tileManager.Initialize();
+        tileManager.Initialize(gridController);
         IsInitialized = true;
     }
 
@@ -33,11 +33,14 @@ public class GameplayController : MonoBehaviour
     {
         levelManager.CreateLevel(linearLevelIndex);
         gridController.Prepare();
+        tileManager.Prepare();
     }
 
     public void UnloadGameplay()
     {
         levelManager.UnloadLevel();
+        gridController.Unload();
+        tileManager.Unload();
     }
 
     public void StartGameplay()
@@ -56,5 +59,6 @@ public class GameplayController : MonoBehaviour
     {
         if (!IsActive)
             return;
+        
     }
 }

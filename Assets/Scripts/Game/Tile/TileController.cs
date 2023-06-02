@@ -9,15 +9,23 @@ public class TileController : MonoBehaviour
     public GameObject blockPrefab;
     public Transform tileTransform;
     public Vector2 blockSize;
+    public List<Vector2> blockOffsets;
     public int rowCount;
     public int columnCount;
     [HideInInspector] public BoolCollection[] shape;
 
+    public GridController GridController { get; private set; }
     public bool IsInitialized { get; private set; }
     public List<GameObject> BlockList { get; private set; }
 
-    public void Initialize()
+    private Vector2 _firstTransform;
+    private Vector3 _screenSpace;
+    private Vector3 _offset;
+    public void Initialize(GridController gridController)
     {
+        _firstTransform = transform.position;
+        GridController = gridController;
+        CreateShape();
         IsInitialized = true;
     }
 
@@ -65,6 +73,37 @@ public class TileController : MonoBehaviour
 
         return blockPositions;
     }
+
+    public void OnMouseDown()
+    {
+        _screenSpace = Camera.main.WorldToScreenPoint(transform.position);
+        _offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y - GameConfigs.Instance.TileMouseDragOffset, _screenSpace.z));
+        transform.localScale *= GameConfigs.Instance.TileDragScale;
+    }
+
+    public void OnMouseDrag()
+    {
+        Vector3 curScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenSpace.z);
+        Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace) + _offset;
+
+        transform.position = Vector3.Lerp(transform.position, curPosition, Time.deltaTime * GameConfigs.Instance.TileDragSpeed);
+    }
+    //public void OnMouseUp()
+    //{
+    //    if (CanPlaceOnGrid())
+    //    {
+    //        Debug.Log("Success");
+    //        // Place the tile on the grid
+    //        // This should include marking the grid cells as full
+    //        // and possibly anchoring the tile to its grid cells
+    //    }
+    //    else
+    //    {
+    //        transform.position = _firstTransform;
+    //    }
+
+    //    transform.localScale = Vector3.one;
+    //}
 
     [System.Serializable]
     public class BoolCollection

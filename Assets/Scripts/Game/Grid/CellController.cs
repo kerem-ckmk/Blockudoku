@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CellController : MonoBehaviour
 {
+    public GameObject fullCell;
     public bool IsInitiailized {  get; private set; }
     public bool IsFull { get; private set; }
     public Vector2 GridInfo { get; private set; }
@@ -21,5 +22,6 @@ public class CellController : MonoBehaviour
     public void SetFull(bool full)
     {
         IsFull = full;
+        fullCell.SetActive(IsFull);
     }
 }

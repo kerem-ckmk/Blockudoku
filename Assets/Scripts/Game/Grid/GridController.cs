@@ -12,9 +12,11 @@ public class GridController : MonoBehaviour
     public Transform lineTransform;
     public Transform gridParent;
     public bool IsInitialized { get; private set; }
+    public CellController[,] CellGrid { get; private set; }
 
     private List<CellController> _cells;
     private List<GameObject> _lines;
+
     public void Initialize()
     {
         _cells = new List<CellController>();
@@ -28,12 +30,14 @@ public class GridController : MonoBehaviour
 
     public void Prepare()
     {
+        CellGrid = new CellController[gridSize, gridSize];
         for (int i = 0; i < gridSize; i++)
         {
             for (int j = 0; j < gridSize; j++)
             {
-                Vector2 gridInfo = new Vector2(i, j);
-                SpawnCellController(gridInfo);
+                Vector2 gridInfo = new Vector2(j, gridSize - 1 - i);
+                CellController cellController = SpawnCellController(gridInfo);
+                CellGrid[i, j] = cellController;
             }
         }
 
