@@ -8,6 +8,7 @@ public class GameplayController : MonoBehaviour
     public CameraController gameCamera;
     public LevelManager levelManager; 
     public GridController gridController;
+    public TileManager tileManager;
 
     public bool IsInitialized { get; private set; }
     public bool IsActive { get; private set; }
@@ -24,6 +25,7 @@ public class GameplayController : MonoBehaviour
         levelManager.Initialize();
         gameCamera.Initialize();
         gridController.Initialize();
+        tileManager.Initialize();
         IsInitialized = true;
     }
 

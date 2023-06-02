@@ -13,6 +13,9 @@ public class GameConfigs : ScriptableObject
     [Header("Economy")]
     public int StartingMoney = 0;
 
+    [Header("Tile")]
+    public float TileSize = 1f;
+
     [Header("Upgrades - Visuals")]
     public Sprite StartingLevelBackground;
     public Sprite StartingLevelIcon;
