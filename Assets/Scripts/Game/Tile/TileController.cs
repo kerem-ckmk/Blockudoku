@@ -5,22 +5,41 @@ using UnityEngine.SubsystemsImplementation;
 
 public class TileController : MonoBehaviour
 {
-    public BoolCollection[] Shape;
-    public GameObject BlockPrefab;
-    public Transform TileTransform;
-    public Vector2 blockSize = new Vector2(100f, 100f);
-
+    [Header("References")]
+    public GameObject blockPrefab;
+    public Transform tileTransform;
+    public Vector2 blockSize;
     public int rowCount;
     public int columnCount;
+    [HideInInspector] public BoolCollection[] shape;
 
-    public void UpdateShape()
+    public bool IsInitialized { get; private set; }
+    public List<GameObject> BlockList { get; private set; }
+
+    public void Initialize()
     {
+        IsInitialized = true;
+    }
+
+    public void CreateShape()
+    {
+        BlockList = new List<GameObject>();
+        BlockList.Clear();
+
         List<Vector3> blockPositions = CalculateBlockPositions();
 
         foreach (Vector3 localPosition in blockPositions)
         {
-            GameObject newBlock = Instantiate(BlockPrefab, localPosition, Quaternion.identity, TileTransform);
+            CreateBlockObject(localPosition);
         }
+    }
+
+    private GameObject CreateBlockObject(Vector2 localPosition)
+    {
+        GameObject block = Instantiate(blockPrefab,tileTransform);
+        block.transform.localPosition = localPosition;
+        BlockList.Add(block);
+        return block;
     }
 
     private List<Vector3> CalculateBlockPositions()
@@ -36,11 +55,10 @@ public class TileController : MonoBehaviour
         {
             for (int c = 0; c < columnCount; c++)
             {
-                if (Shape[r].Collection[c])
+                if (shape[r].Collection[c])
                 {
                     Vector3 position = startPosition + new Vector3(c * blockSize.x - offsetX, -r * blockSize.y + offsetY, 0f);
-                    Vector3 localPosition = transform.TransformPoint(position);
-                    blockPositions.Add(localPosition);
+                    blockPositions.Add(position);
                 }
             }
         }

@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using static TileController;
 
 [CustomEditor(typeof(TileController))]
 public class TileControllerEditor : Editor
@@ -10,20 +11,29 @@ public class TileControllerEditor : Editor
 
         TileController tileController = (TileController)target;
 
-        // Þekil matrisini çizdir
+        if (tileController.columnCount == 0)
+        {
+            tileController.shape = new BoolCollection[tileController.rowCount];
+            for (int i = 0; i < tileController.rowCount; i++)
+            {
+                tileController.shape[i] = new BoolCollection();
+                tileController.shape[i].Collection = new bool[tileController.columnCount];
+            }
+        }
+
         for (int r = 0; r < tileController.rowCount; r++)
         {
             EditorGUILayout.BeginHorizontal();
             for (int c = 0; c < tileController.columnCount; c++)
             {
-                tileController.Shape[r].Collection[c] = EditorGUILayout.Toggle(tileController.Shape[r].Collection[c], GUILayout.Width(15), GUILayout.Height(15));
+                tileController.shape[r].Collection[c] = EditorGUILayout.Toggle(tileController.shape[r].Collection[c], GUILayout.Width(15), GUILayout.Height(15));
             }
             EditorGUILayout.EndHorizontal();
         }
 
         if (GUILayout.Button("Update Shape"))
         {
-            tileController.UpdateShape();
+            tileController.CreateShape();
         }
 
         if (GUILayout.Button("Set All"))
@@ -32,7 +42,7 @@ public class TileControllerEditor : Editor
             {
                 for (int c = 0; c < tileController.columnCount; c++)
                 {
-                    tileController.Shape[r].Collection[c] = true;
+                    tileController.shape[r].Collection[c] = true;
                 }
             }
         }
@@ -43,7 +53,7 @@ public class TileControllerEditor : Editor
             {
                 for (int c = 0; c < tileController.columnCount; c++)
                 {
-                    tileController.Shape[r].Collection[c] = false;
+                    tileController.shape[r].Collection[c] = false;
                 }
             }
         }
