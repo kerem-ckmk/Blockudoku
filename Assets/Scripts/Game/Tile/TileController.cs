@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.SubsystemsImplementation;
 
 public class TileController : MonoBehaviour
 {
@@ -20,6 +18,7 @@ public class TileController : MonoBehaviour
 
     private Vector3 _screenSpace;
     private Vector3 _offset;
+
     public void Initialize(GridController gridController)
     {
         GridController = gridController;
@@ -30,13 +29,13 @@ public class TileController : MonoBehaviour
     public void CreateShape()
     {
         BlockList = new List<GameObject>();
-        BlockList.Clear();
 
         List<Vector3> blockPositions = CalculateBlockPositions();
 
         foreach (Vector3 localPosition in blockPositions)
         {
-            CreateBlockObject(localPosition);
+            GameObject block = CreateBlockObject(localPosition);
+            BlockList.Add(block);
         }
     }
 
@@ -44,7 +43,6 @@ public class TileController : MonoBehaviour
     {
         GameObject block = Instantiate(blockPrefab, tileTransform);
         block.transform.localPosition = localPosition;
-        BlockList.Add(block);
         return block;
     }
 
@@ -86,10 +84,12 @@ public class TileController : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, curPosition, Time.deltaTime * GameConfigs.Instance.TileDragSpeed);
     }
+
     public void OnMouseUp()
     {
         bool canPlace = true;
         List<CellController> cellsToFill = new List<CellController>();
+
         foreach (var block in BlockList)
         {
             CellController cell = GetCellUnderneath(block.transform.position);
@@ -121,11 +121,13 @@ public class TileController : MonoBehaviour
     private CellController GetCellUnderneath(Vector2 position)
     {
         RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up);
-        if (hit.collider.GetComponent<CellController>())
+        if (hit.collider != null)
         {
             CellController cell = hit.collider.GetComponent<CellController>();
-            cell = cell.IsFull ? null : cell;
-            return cell;
+            if (cell != null && !cell.IsFull)
+            {
+                return cell;
+            }
         }
         return null;
     }
@@ -133,7 +135,6 @@ public class TileController : MonoBehaviour
     [System.Serializable]
     public class BoolCollection
     {
-        [SerializeField]
         public bool[] Collection;
     }
 }
