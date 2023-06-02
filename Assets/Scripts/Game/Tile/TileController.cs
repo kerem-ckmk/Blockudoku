@@ -114,8 +114,6 @@ public class TileController : MonoBehaviour
         {
             transform.localPosition = Vector3.zero;
         }
-
-        transform.localScale = Vector3.one;
     }
 
     private CellController GetCellUnderneath(Vector2 position)
