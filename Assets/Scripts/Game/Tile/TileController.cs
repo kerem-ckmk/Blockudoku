@@ -18,12 +18,10 @@ public class TileController : MonoBehaviour
     public bool IsInitialized { get; private set; }
     public List<GameObject> BlockList { get; private set; }
 
-    private Vector2 _firstTransform;
     private Vector3 _screenSpace;
     private Vector3 _offset;
     public void Initialize(GridController gridController)
     {
-        _firstTransform = transform.position;
         GridController = gridController;
         CreateShape();
         IsInitialized = true;
@@ -44,7 +42,7 @@ public class TileController : MonoBehaviour
 
     private GameObject CreateBlockObject(Vector2 localPosition)
     {
-        GameObject block = Instantiate(blockPrefab,tileTransform);
+        GameObject block = Instantiate(blockPrefab, tileTransform);
         block.transform.localPosition = localPosition;
         BlockList.Add(block);
         return block;
@@ -76,7 +74,7 @@ public class TileController : MonoBehaviour
 
     public void OnMouseDown()
     {
-        _screenSpace = Camera.main.WorldToScreenPoint(transform.position);
+        _screenSpace = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0f, 0f, Camera.main.nearClipPlane));
         _offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y - GameConfigs.Instance.TileMouseDragOffset, _screenSpace.z));
         transform.localScale *= GameConfigs.Instance.TileDragScale;
     }
@@ -88,22 +86,49 @@ public class TileController : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, curPosition, Time.deltaTime * GameConfigs.Instance.TileDragSpeed);
     }
-    //public void OnMouseUp()
-    //{
-    //    if (CanPlaceOnGrid())
-    //    {
-    //        Debug.Log("Success");
-    //        // Place the tile on the grid
-    //        // This should include marking the grid cells as full
-    //        // and possibly anchoring the tile to its grid cells
-    //    }
-    //    else
-    //    {
-    //        transform.position = _firstTransform;
-    //    }
+    public void OnMouseUp()
+    {
+        bool canPlace = true;
+        List<CellController> cellsToFill = new List<CellController>();
+        foreach (var block in BlockList)
+        {
+            CellController cell = GetCellUnderneath(block.transform.position);
+            if (cell == null || cell.IsFull)
+            {
+                canPlace = false;
+                break;
+            }
+            cellsToFill.Add(cell);
+        }
 
-    //    transform.localScale = Vector3.one;
-    //}
+        if (canPlace)
+        {
+            foreach (var cell in cellsToFill)
+            {
+                cell.SetFull(true);
+            }
+
+            Destroy(gameObject);
+        }
+        else
+        {
+            transform.localPosition = Vector3.zero;
+        }
+
+        transform.localScale = Vector3.one;
+    }
+
+    private CellController GetCellUnderneath(Vector2 position)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up);
+        if (hit.collider != null)
+        {
+            CellController cell = hit.collider.GetComponent<CellController>();
+            cell = cell.IsFull ? null : cell;
+            return cell;
+        }
+        return null;
+    }
 
     [System.Serializable]
     public class BoolCollection
