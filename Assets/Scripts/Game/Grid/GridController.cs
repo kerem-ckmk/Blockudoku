@@ -41,6 +41,9 @@ public class GridController : MonoBehaviour
 
     private void InstantiateLines()
     {
+        if (_lines.Count > 0)
+            return;
+
         for (int i = 0; i < gridSize; i++)
             _lines.Add(Instantiate(linePrefab, lineTransform));
     }
@@ -139,6 +142,12 @@ public class GridController : MonoBehaviour
 
     public void Unload()
     {
+        foreach (var cell in Cells)
+        {
+            cell.SetFull(false);
+            cell.gameObject.SetActive(false);
+        }
+
         IsInitialized = false;
     }
 

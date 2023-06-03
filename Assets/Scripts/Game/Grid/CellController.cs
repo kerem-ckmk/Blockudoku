@@ -14,6 +14,10 @@ public class CellController : MonoBehaviour
 
     public void Initialize(Vector2Int gridInfo, float size)
     {
+        gameObject.SetActive(true);
+        defaultCell.SetActive(true);
+        fullCell.SetActive(false);
+
         _collider = GetComponent<BoxCollider2D>();
         _collider.size = size * Vector2.one;
         GridInfo = gridInfo;
