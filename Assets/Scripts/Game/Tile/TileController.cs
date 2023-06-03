@@ -106,7 +106,7 @@ public class TileController : MonoBehaviour
             BacktoPosition();
             return;
         }
-        
+
         _cellControllerGrids.Clear();
 
         _cellControllerGrids = GetMatchingEmptyCells(cell.GridInfo);
@@ -140,7 +140,9 @@ public class TileController : MonoBehaviour
             if (!isCellFull)
             {
                 CellController cellController = GridController.GetCell(adjustedGrid);
-                emptyCells.Add(cellController);
+
+                if (cellController != null)
+                    emptyCells.Add(cellController);
             }
         }
 
