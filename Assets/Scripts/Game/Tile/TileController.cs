@@ -128,7 +128,7 @@ public class TileController : MonoBehaviour
 
     private CellController GetCellUnderneath(Vector2 position)
     {
-        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up);
+        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up , 10f);
         if (hit.collider != null)
         {
             CellController cell = hit.collider.GetComponent<CellController>();
