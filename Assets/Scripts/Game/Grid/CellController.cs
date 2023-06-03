@@ -6,7 +6,8 @@ using UnityEngine;
 public class CellController : MonoBehaviour
 {
     public GameObject fullCell;
-    public bool IsInitiailized {  get; private set; }
+    public GameObject defaultCell;
+    public bool IsInitiailized { get; private set; }
     public bool IsFull { get; private set; }
     public Vector2 GridInfo { get; private set; }
     private BoxCollider2D _collider;
@@ -23,5 +24,6 @@ public class CellController : MonoBehaviour
     {
         IsFull = full;
         fullCell.SetActive(IsFull);
+        defaultCell.SetActive(!IsFull);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ public class TileManager : MonoBehaviour
     public bool IsInitiailized { get; private set; }
     public List<TileController> ActiveTiles { get; private set; }
     public GridController GridController { get; private set; }
+
+    public event Action OnCheckGrid;
+    public event Action OnFinish;
     public void Initialize(GridController gridController)
     {
         GridController = gridController;
@@ -22,14 +26,14 @@ public class TileManager : MonoBehaviour
         ActiveTiles.Clear();
         SpawnTiles();
     }
-    
+
     private void SpawnTiles()
     {
         for (int i = 0; i < 3; i++)
         {
             var tile = CreateTileController(i);
             tile.OnDestroyTile += Tile_OnDestroyTile;
-            ActiveTiles.Add(tile);  
+            ActiveTiles.Add(tile);
         }
     }
 
@@ -43,6 +47,16 @@ public class TileManager : MonoBehaviour
             ActiveTiles.Clear();
             SpawnTiles();
         }
+
+        OnCheckGrid?.Invoke();
+
+        if (IsGameOver())
+        {
+            OnFinish?.Invoke();
+        }
+
+    
+
     }
 
     public void Unload()
@@ -55,10 +69,22 @@ public class TileManager : MonoBehaviour
 
     private TileController CreateTileController(int transformIndex)
     {
-        int random = Random.Range(0, tilePrefabs.Count);
+        int random = UnityEngine.Random.Range(0, tilePrefabs.Count);
         var tileControllerObject = Instantiate(tilePrefabs[random], tileTransforms[transformIndex]);
         tileControllerObject.Initialize(GridController, cameraUI);
         return tileControllerObject;
+    }
+
+    public bool IsGameOver()
+    {
+        foreach (var tile in ActiveTiles)
+        {
+            if (tile.CanPlaceInGrid())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

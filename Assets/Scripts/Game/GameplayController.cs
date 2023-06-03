@@ -26,7 +26,14 @@ public class GameplayController : MonoBehaviour
         gameCamera.Initialize();
         gridController.Initialize();
         tileManager.Initialize(gridController);
+        tileManager.OnCheckGrid += TileManager_OnCheckgrid;
+        tileManager.OnFinish += TileManager_OnFinish;
         IsInitialized = true;
+    }
+
+    private void TileManager_OnFinish()
+    {
+        FinishGameplay(true);
     }
 
     public void PrepareGameplay(int linearLevelIndex)
@@ -53,6 +60,12 @@ public class GameplayController : MonoBehaviour
         IsActive = false;
 
         OnGameplayFinished?.Invoke(success);
+    }
+
+
+    private void TileManager_OnCheckgrid()
+    {
+        gridController.CheckGrid();
     }
 
     private void Update()

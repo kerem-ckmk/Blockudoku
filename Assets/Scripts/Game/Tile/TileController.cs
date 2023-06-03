@@ -75,6 +75,8 @@ public class TileController : MonoBehaviour
         return blockPositions;
     }
 
+
+
     public void OnMouseDown()
     {
         _screenSpace = _camera.WorldToScreenPoint(transform.position);
@@ -136,6 +138,42 @@ public class TileController : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public bool CanPlaceInGrid()
+    {
+        for (int i = 0; i < GridController.gridSize; i++)
+        {
+            for (int j = 0; j < GridController.gridSize; j++)
+            {
+                if (CanPlaceAt(i, j))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool CanPlaceAt(int gridX, int gridY)
+    {
+        foreach (var block in BlockList)
+        {
+            int blockGridX = gridX + Mathf.RoundToInt(block.transform.localPosition.x / blockSize.x);
+            int blockGridY = gridY - Mathf.RoundToInt(block.transform.localPosition.y / blockSize.y);
+
+            if (blockGridX < 0 || blockGridX >= GridController.gridSize || blockGridY < 0 || blockGridY >= GridController.gridSize)
+            {
+                return false;
+            }
+            if (GridController.CellGrid[blockGridX, blockGridY].IsFull)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     [System.Serializable]

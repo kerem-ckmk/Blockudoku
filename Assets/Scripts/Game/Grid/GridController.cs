@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GridController : MonoBehaviour
 {
@@ -14,66 +13,126 @@ public class GridController : MonoBehaviour
     public bool IsInitialized { get; private set; }
     public CellController[,] CellGrid { get; private set; }
 
-    private List<CellController> _cells;
-    private List<GameObject> _lines;
+    private List<CellController> _cells = new List<CellController>();
+    private List<GameObject> _lines = new List<GameObject>();
 
     public void Initialize()
     {
-        _cells = new List<CellController>();
         _cells.Clear();
-
-        _lines = new List<GameObject>();
         _lines.Clear();
-
         IsInitialized = true;
     }
 
     public void Prepare()
     {
-        CellGrid = new CellController[gridSize, gridSize];
-        for (int i = 0; i < gridSize; i++)
-        {
-            for (int j = 0; j < gridSize; j++)
-            {
-                Vector2 gridInfo = new Vector2(j, gridSize - 1 - i);
-                CellController cellController = SpawnCellController(gridInfo);
-                CellGrid[i, j] = cellController;
-            }
-        }
+        CreateGrid();
+        InstantiateLines();
+    }
 
+    private void CreateGrid()
+    {
+        CellGrid = new CellController[gridSize, gridSize];
+        for (int row = 0; row < gridSize; row++)
+            for (int col = 0; col < gridSize; col++)
+                CellGrid[row, col] = SpawnCellController(new Vector2(col, gridSize - 1 - row));
+    }
+
+    private void InstantiateLines()
+    {
         for (int i = 0; i < gridSize; i++)
-        {
-            var lineObject = Instantiate(linePrefab, lineTransform);
-            _lines.Add(lineObject);
-        }
+            _lines.Add(Instantiate(linePrefab, lineTransform));
     }
 
     private CellController SpawnCellController(Vector2 gridInfo)
     {
-        CellController cellControllerObject = null;
+        CellController cellController = FindInactiveCell() ?? CreateCellController();
+        cellController.Initialize(gridInfo, cellSize);
+        return cellController;
+    }
 
-        foreach (CellController cellController in _cells)
-        {
-            if (!cellController.gameObject.activeSelf)
-            {
-                cellControllerObject = cellController;
-                break;
-            }
-        }
-
-        if (cellControllerObject == null)
-            cellControllerObject = CreateCellController();
-
-        cellControllerObject.Initialize(gridInfo, cellSize);
-
-        return cellControllerObject;
+    private CellController FindInactiveCell()
+    {
+        return _cells.Find(cellController => !cellController.gameObject.activeSelf);
     }
 
     private CellController CreateCellController()
     {
-        var cellControllerObject = Instantiate(cellControllerPrefab, gridParent);
-        _cells.Add(cellControllerObject);
-        return cellControllerObject;
+        var cellController = Instantiate(cellControllerPrefab, gridParent);
+        _cells.Add(cellController);
+        return cellController;
+    }
+
+    public void CheckGrid()
+    {
+        ClearCompleteRows();
+        ClearCompleteColumns();
+        ClearCompleteBlocks();
+    }
+
+    private void ClearCompleteRows()
+    {
+        for (int row = 0; row < gridSize; row++)
+            if (IsRowComplete(row))
+                SetRowActive(row, false);
+    }
+
+    private bool IsRowComplete(int row)
+    {
+        for (int col = 0; col < gridSize; col++)
+            if (!CellGrid[row, col].IsFull)
+                return false;
+        return true;
+    }
+
+    private void SetRowActive(int row, bool isActive)
+    {
+        for (int col = 0; col < gridSize; col++)
+            CellGrid[row, col].SetFull(isActive);
+    }
+
+    private void ClearCompleteColumns()
+    {
+        for (int col = 0; col < gridSize; col++)
+            if (IsColumnComplete(col))
+                SetColumnActive(col, false);
+    }
+
+    private bool IsColumnComplete(int col)
+    {
+        for (int row = 0; row < gridSize; row++)
+            if (!CellGrid[row, col].IsFull)
+                return false;
+        return true;
+    }
+
+    private void SetColumnActive(int col, bool isActive)
+    {
+        for (int row = 0; row < gridSize; row++)
+            CellGrid[row, col].SetFull(isActive);
+    }
+
+    private void ClearCompleteBlocks()
+    {
+        for (int row = 0; row < gridSize; row += 3)
+            for (int col = 0; col < gridSize; col += 3)
+                if (IsBlockComplete(row, col))
+                    SetBlockActive(row, col, false);
+    }
+
+    private bool IsBlockComplete(int startRow, int startCol)
+    {
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < 3; col++)
+                if (!CellGrid[startRow + row, startCol + col].IsFull)
+                    return false;
+        return true;
+    }
+
+    private void SetBlockActive(int startRow, int startCol, bool isActive)
+    {
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < 3; col++)
+                CellGrid[startRow + row, startCol + col].SetFull(isActive);
     }
 
     public void Unload()
