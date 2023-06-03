@@ -62,13 +62,9 @@ public class UIManager : MonoBehaviour
         {
             ShowPanel(loadingPanel);
         }
-        //else if (newGameState == GameState.Menu)
-        //{
-        //    OnMenuState();
-        //    ShowPanel(menuPanel);
-        //}
         else if (newGameState == GameState.Gameplay)
         {
+            OnMenuState();
             ShowPanel(gameplayPanel);
         }
         else if (newGameState == GameState.FinishSuccess)
