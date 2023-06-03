@@ -80,12 +80,12 @@ MonoBehaviour:
     type: 3}
   tileTransform: {fileID: 2578458045667142415}
   blockSize: {x: 50, y: 50}
-  blockOffsets:
-  - {x: 2, y: 2}
-  - {x: 1, y: 2}
-  - {x: 0, y: 2}
+  BlockGrid:
+  - {x: 0, y: -1}
+  - {x: 0, y: 0}
+  - {x: -1, y: 1}
+  - {x: 0, y: 1}
   - {x: 1, y: 1}
-  - {x: 1, y: 0}
   rowCount: 3
   columnCount: 3
   shape:

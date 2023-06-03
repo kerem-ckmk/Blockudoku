@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class TileController : MonoBehaviour
@@ -8,7 +10,7 @@ public class TileController : MonoBehaviour
     public GameObject blockPrefab;
     public Transform tileTransform;
     public Vector2 blockSize;
-    public List<Vector2> blockOffsets;
+    public List<Vector2Int> BlockGrid;
     public int rowCount;
     public int columnCount;
     [HideInInspector] public BoolCollection[] shape;
@@ -20,11 +22,13 @@ public class TileController : MonoBehaviour
     private Vector3 _screenSpace;
     private Vector3 _offset;
     private Camera _camera;
+    private List<CellController> _cellControllerGrids;
 
     public event Action<TileController> OnDestroyTile;
 
     public void Initialize(GridController gridController, Camera camera)
     {
+        _cellControllerGrids = new List<CellController>();
         _camera = camera;
         GridController = gridController;
         CreateShape();
@@ -95,79 +99,87 @@ public class TileController : MonoBehaviour
 
     public void OnMouseUp()
     {
-        bool canPlace = true;
-        List<CellController> cellsToFill = new List<CellController>();
+        CellController cell = GetCellUnderneath(transform.position);
 
-        foreach (var block in BlockList)
+        if (cell == null)
         {
-            CellController cell = GetCellUnderneath(block.transform.position);
-            if (cell == null || cell.IsFull)
-            {
-                canPlace = false;
-                break;
-            }
-            cellsToFill.Add(cell);
+            BacktoPosition();
+            return;
         }
+        
+        _cellControllerGrids.Clear();
 
-        if (canPlace)
+        _cellControllerGrids = GetMatchingEmptyCells(cell.GridInfo);
+
+        if (BlockGrid.Count == _cellControllerGrids.Count)
         {
-            foreach (var cell in cellsToFill)
+            foreach (var cellController in _cellControllerGrids)
             {
-                cell.SetFull(true);
+                cellController.SetFull(true);
             }
 
             OnDestroyTile?.Invoke(this);
         }
         else
         {
-            transform.localPosition = Vector3.zero;
+            BacktoPosition();
+        }
+    }
+
+    private List<CellController> GetMatchingEmptyCells(Vector2Int centerCell)
+    {
+        List<CellController> emptyCells = new List<CellController>();
+
+        foreach (var blockGrid in BlockGrid)
+        {
+            Vector2Int needGrid = centerCell + blockGrid;
+            Vector2Int adjustedGrid = new Vector2Int(needGrid.x, GridController.gridSize - 1 - needGrid.y);
+
+            bool isCellFull = GridController.IsCellFull(adjustedGrid);
+
+            if (!isCellFull)
+            {
+                CellController cellController = GridController.GetCell(adjustedGrid);
+                emptyCells.Add(cellController);
+            }
         }
 
+        return emptyCells;
+    }
+
+    private void BacktoPosition()
+    {
+        transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
     }
 
+
     private CellController GetCellUnderneath(Vector2 position)
     {
-        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up , 10f);
-        if (hit.collider != null)
+        RaycastHit2D hit = Physics2D.Raycast(position, -Vector2.up, 10f);
+        CellController cell = hit.collider.GetComponent<CellController>();
+
+        if (cell != null && !cell.IsFull)
         {
-            CellController cell = hit.collider.GetComponent<CellController>();
-            if (cell != null && !cell.IsFull)
-            {
-                return cell;
-            }
+            return cell;
         }
+
         return null;
     }
 
-    public bool CanPlaceInGrid()
+    public bool CanPlaceAtCell(Vector2Int cellGridInfo)
     {
-        for (int i = 0; i < GridController.gridSize; i++)
+        foreach (var blockGrid in BlockGrid)
         {
-            for (int j = 0; j < GridController.gridSize; j++)
-            {
-                if (CanPlaceAt(i, j))
-                {
-                    return true;
-                }
-            }
-        }
+            Vector2Int gridPos = cellGridInfo + blockGrid;
+            Vector2Int adjustedGrid = new Vector2Int(gridPos.x, GridController.gridSize - 1 - gridPos.y);
 
-        return false;
-    }
-
-    private bool CanPlaceAt(int gridX, int gridY)
-    {
-        foreach (var block in BlockList)
-        {
-            int blockGridX = gridX + Mathf.RoundToInt(block.transform.localPosition.x / blockSize.x);
-            int blockGridY = gridY - Mathf.RoundToInt(block.transform.localPosition.y / blockSize.y);
-
-            if (blockGridX < 0 || blockGridX >= GridController.gridSize || blockGridY < 0 || blockGridY >= GridController.gridSize)
+            if (adjustedGrid.x < 0 || adjustedGrid.y < 0 || adjustedGrid.x >= GridController.gridSize || adjustedGrid.y >= GridController.gridSize)
             {
                 return false;
             }
-            if (GridController.CellGrid[blockGridX, blockGridY].IsFull)
+
+            if (GridController.IsCellFull(adjustedGrid))
             {
                 return false;
             }

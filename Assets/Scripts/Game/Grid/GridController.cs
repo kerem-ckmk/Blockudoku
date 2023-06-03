@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
@@ -13,12 +14,13 @@ public class GridController : MonoBehaviour
     public bool IsInitialized { get; private set; }
     public CellController[,] CellGrid { get; private set; }
 
-    private List<CellController> _cells = new List<CellController>();
+    public List<CellController> Cells { get; private set; }
     private List<GameObject> _lines = new List<GameObject>();
 
     public void Initialize()
     {
-        _cells.Clear();
+        Cells = new List<CellController>();
+        Cells.Clear();
         _lines.Clear();
         IsInitialized = true;
     }
@@ -34,7 +36,7 @@ public class GridController : MonoBehaviour
         CellGrid = new CellController[gridSize, gridSize];
         for (int row = 0; row < gridSize; row++)
             for (int col = 0; col < gridSize; col++)
-                CellGrid[row, col] = SpawnCellController(new Vector2(col, gridSize - 1 - row));
+                CellGrid[row, col] = SpawnCellController(new Vector2Int(col, gridSize - 1 - row));
     }
 
     private void InstantiateLines()
@@ -43,7 +45,7 @@ public class GridController : MonoBehaviour
             _lines.Add(Instantiate(linePrefab, lineTransform));
     }
 
-    private CellController SpawnCellController(Vector2 gridInfo)
+    private CellController SpawnCellController(Vector2Int gridInfo)
     {
         CellController cellController = FindInactiveCell() ?? CreateCellController();
         cellController.Initialize(gridInfo, cellSize);
@@ -52,13 +54,13 @@ public class GridController : MonoBehaviour
 
     private CellController FindInactiveCell()
     {
-        return _cells.Find(cellController => !cellController.gameObject.activeSelf);
+        return Cells.Find(cellController => !cellController.gameObject.activeSelf);
     }
 
     private CellController CreateCellController()
     {
         var cellController = Instantiate(cellControllerPrefab, gridParent);
-        _cells.Add(cellController);
+        Cells.Add(cellController);
         return cellController;
     }
 
@@ -138,5 +140,18 @@ public class GridController : MonoBehaviour
     public void Unload()
     {
         IsInitialized = false;
+    }
+
+    public CellController GetCell(Vector2Int gridInfo)
+    {
+        if (gridInfo.x < 0 || gridInfo.y < 0 || gridInfo.x >= gridSize || gridInfo.y >= gridSize)
+            return null;
+
+        return CellGrid[gridInfo.y, gridInfo.x];
+    }
+    public bool IsCellFull(Vector2Int gridInfo)
+    {
+        CellController cellController = GetCell(gridInfo);
+        return cellController?.IsFull ?? false;
     }
 }

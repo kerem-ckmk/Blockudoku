@@ -79,9 +79,12 @@ public class TileManager : MonoBehaviour
     {
         foreach (var tile in ActiveTiles)
         {
-            if (tile.CanPlaceInGrid())
+            foreach (var cell in GridController.Cells)
             {
-                return false;
+                if (tile.CanPlaceAtCell(cell.GridInfo))
+                {
+                    return false;
+                }
             }
         }
         return true;

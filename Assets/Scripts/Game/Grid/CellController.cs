@@ -9,10 +9,10 @@ public class CellController : MonoBehaviour
     public GameObject defaultCell;
     public bool IsInitiailized { get; private set; }
     public bool IsFull { get; private set; }
-    public Vector2 GridInfo { get; private set; }
+    public Vector2Int GridInfo { get; private set; }
     private BoxCollider2D _collider;
 
-    public void Initialize(Vector2 gridInfo, float size)
+    public void Initialize(Vector2Int gridInfo, float size)
     {
         _collider = GetComponent<BoxCollider2D>();
         _collider.size = size * Vector2.one;
