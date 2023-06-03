@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using static TileController;
 
 [CustomEditor(typeof(TileController))]
 public class TileControllerEditor : Editor

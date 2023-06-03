@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using Lofelt.NiceVibrations;
+using System.Collections.Generic;
 using TMPro;
-using Lofelt.NiceVibrations;
+using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
