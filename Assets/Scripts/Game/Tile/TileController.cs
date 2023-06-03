@@ -90,7 +90,7 @@ public class TileController : MonoBehaviour
         Vector3 curPosition = _camera.ScreenToWorldPoint(curScreenSpace) + _offset;
 
         transform.position = curPosition;
-        transform.SetLocalPositionZ(1f);
+        transform.SetLocalPositionZ(3f);
     }
 
     public void OnMouseUp()
