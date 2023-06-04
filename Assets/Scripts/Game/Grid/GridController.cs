@@ -93,6 +93,7 @@ public class GridController : MonoBehaviour
         for (int col = 0; col < gridSize; col++)
             if (!Cells[row, col].IsFull)
                 return false;
+
         return true;
     }
 
@@ -114,6 +115,7 @@ public class GridController : MonoBehaviour
         for (int row = 0; row < gridSize; row++)
             if (!Cells[row, col].IsFull)
                 return false;
+
         return true;
     }
 
@@ -137,6 +139,7 @@ public class GridController : MonoBehaviour
             for (int col = 0; col < 3; col++)
                 if (!Cells[startRow + row, startCol + col].IsFull)
                     return false;
+
         return true;
     }
 

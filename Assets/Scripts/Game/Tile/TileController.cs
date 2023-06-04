@@ -6,6 +6,7 @@ public class TileController : MonoBehaviour
 {
     [Header("References")]
     public GameObject blockPrefab;
+    public GameObject deactivePrefab;
     public Transform tileTransform;
     public Vector2 blockSize;
     public List<Vector2Int> BlockGrid;
@@ -21,11 +22,14 @@ public class TileController : MonoBehaviour
     private Vector3 _offset;
     private Camera _camera;
     private List<CellController> _cellControllerGrids;
+    private GameObject _deactiveObject;
+    private BoxCollider2D _boxCollider;
 
     public event Action<TileController> OnDestroyTile;
 
     public void Initialize(GridController gridController, Camera camera)
     {
+        _boxCollider = GetComponent<BoxCollider2D>();
         _cellControllerGrids = new List<CellController>();
         _camera = camera;
         GridController = gridController;
@@ -53,6 +57,13 @@ public class TileController : MonoBehaviour
         return block;
     }
 
+    private GameObject CreateDeactive()
+    {
+        GameObject deactiveObject = Instantiate(deactivePrefab, tileTransform);
+        return deactiveObject;
+    }
+
+
     private List<Vector3> CalculateBlockPositions()
     {
         List<Vector3> blockPositions = new List<Vector3>();
@@ -75,6 +86,18 @@ public class TileController : MonoBehaviour
         }
 
         return blockPositions;
+    }
+
+    public void SetActiveState(bool active)
+    {
+        if (!active)
+            if (_deactiveObject == null)
+                _deactiveObject = CreateDeactive();
+
+        if (_deactiveObject != null)
+            _deactiveObject.SetActive(!active);
+        
+        _boxCollider.enabled = active;
     }
 
     public void OnMouseDown()

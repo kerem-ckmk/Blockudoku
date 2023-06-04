@@ -1,4 +1,5 @@
 ﻿using Lofelt.NiceVibrations;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -109,5 +110,16 @@ public class UIManager : MonoBehaviour
     private void CurrencyHudWidget_OnCurrencyParticleMovementFinished()
     {
         GameManager.DoHaptic(HapticPatterns.PresetType.SoftImpact);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            TimeSpan timeSpan = TimeSpan.FromDays(4) + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(43);
+            string timeSpanStr = timeSpan.ToString(@"d'g 'hh'sa 'mm'dk'");
+
+            Debug.Log(timeSpanStr);
+        }
     }
 }

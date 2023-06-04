@@ -78,6 +78,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 3035766504085760211, guid: 1a86611a26e5dd046ae6540c37232661,
     type: 3}
+  deactivePrefab: {fileID: 1381471001493492369, guid: e2e9de4d73c64fa45a276323ee154400,
+    type: 3}
   tileTransform: {fileID: 2578458045667142415}
   blockSize: {x: 50, y: 50}
   BlockGrid:

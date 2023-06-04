@@ -78,17 +78,32 @@ public class TileManager : MonoBehaviour
 
     public bool IsGameOver()
     {
+        bool isGameOver = true;
+
         foreach (var tile in ActiveTiles)
         {
+            bool canPlace = false;
             foreach (var cell in GridController.Cells)
             {
                 if (tile.CanPlaceAtCell(cell.GridInfo))
                 {
-                    return false;
+                    canPlace = true;
+                    break;
                 }
             }
+
+            if (canPlace)
+            {
+                tile.SetActiveState(true);
+                isGameOver = false;
+            }
+            else
+            {
+                tile.SetActiveState(false);
+            }
         }
-        return true;
+
+        return isGameOver;
     }
 
 }
