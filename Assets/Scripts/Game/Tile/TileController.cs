@@ -103,6 +103,7 @@ public class TileController : MonoBehaviour
     public void OnMouseDown()
     {
         PrepareDrag();
+        GameManager.PlaySound(GameConfigs.Instance.ButtonSound);
     }
 
     public void OnMouseDrag()
@@ -137,6 +138,8 @@ public class TileController : MonoBehaviour
         {
             BacktoPosition();
         }
+
+        GameManager.PlaySound(GameConfigs.Instance.ButtonSound);
     }
 
     private List<CellController> GetMatchingEmptyCells(Vector2Int centerCell)

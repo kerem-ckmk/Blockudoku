@@ -53,6 +53,7 @@ public class FinishSuccessPanel : UIPanel
         //  DOVirtual.DelayedCall(2f, () =>
         // {
         GameManager.FullyFinishGameplay();
+        GameManager.PlaySound(GameConfigs.Instance.ButtonSound);
         // });
     }
 

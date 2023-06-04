@@ -36,5 +36,6 @@ public class GameplayPanel : UIPanel
     private void SettingsButtonClicked()
     {
         settingsPopup.ShowPanel();
+        GameManager.PlaySound(GameConfigs.Instance.ButtonSound);
     }
 }
