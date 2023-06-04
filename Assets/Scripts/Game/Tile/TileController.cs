@@ -77,22 +77,14 @@ public class TileController : MonoBehaviour
         return blockPositions;
     }
 
-
-
     public void OnMouseDown()
     {
-        _screenSpace = _camera.WorldToScreenPoint(transform.position);
-        _offset = transform.position - _camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y - GameConfigs.Instance.TileMouseDragOffset, _screenSpace.z));
-        transform.localScale *= GameConfigs.Instance.TileDragScale;
+        PrepareDrag();
     }
 
     public void OnMouseDrag()
     {
-        Vector3 curScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenSpace.z);
-        Vector3 curPosition = _camera.ScreenToWorldPoint(curScreenSpace) + _offset;
-
-        transform.position = curPosition;
-        transform.SetLocalPositionZ(3f);
+        PerformDrag();
     }
 
     public void OnMouseUp()
@@ -186,6 +178,22 @@ public class TileController : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void PrepareDrag()
+    {
+        _screenSpace = _camera.WorldToScreenPoint(transform.position);
+        _offset = transform.position - _camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y - GameConfigs.Instance.TileMouseDragOffset, _screenSpace.z));
+        transform.localScale *= GameConfigs.Instance.TileDragScale;
+    }
+
+    private void PerformDrag()
+    {
+        Vector3 curScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenSpace.z);
+        Vector3 targetPosition = _camera.ScreenToWorldPoint(curScreenSpace) + _offset;
+
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * GameConfigs.Instance.TileDragSpeed);
+        transform.SetLocalPositionZ(3f);
     }
 
     [System.Serializable]
