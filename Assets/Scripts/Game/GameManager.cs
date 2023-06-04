@@ -81,8 +81,8 @@ public class GameManager : MonoBehaviour
             gameConfigs = GameConfigs.Instance;
         }
 
-        gameplayController.OnGameplayFinished += GameplayController_OnGameplayFinished;
-        gameplayController.OnChangeHighScore += GameplayController_OnChangeHighScore;
+        gameplayController.OnGameplayFinished += GameplayControllerOnGameplayFinished;
+        gameplayController.OnChangeHighScore += GameplayControllerOnChangeHighScore;
         DG.Tweening.DOTween.SetTweensCapacity(500, 500);
 
         VibrationSettingChanged(IsVibrationEnabled);
@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
         ChangeCurrentGameState(GameState.Gameplay);
     }
 
-    private void GameplayController_OnGameplayFinished(bool success)
+    private void GameplayControllerOnGameplayFinished(bool success)
     {
         if (success)
         {
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GameplayController_OnChangeHighScore(int score)
+    private void GameplayControllerOnChangeHighScore(int score)
     {
         PlayerHighScore = score > PlayerHighScore ? score : PlayerHighScore;
         OnChangeScoreBoard?.Invoke(score);

@@ -30,14 +30,14 @@ public class UIManager : MonoBehaviour
 
         HideAllPanels(true);
 
-        gameManager.OnGameStateChanged += GameManager_OnGameStateChanged;
-        gameManager.OnChangeScoreBoard += GameManager_OnChangeScoreBoard;
-        loadingPanel.OnLoadingFinished += LoadingPanel_OnLoadingFinished;
+        gameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        gameManager.OnChangeScoreBoard += GameManagerOnChangeScoreBoard;
+        loadingPanel.OnLoadingFinished += LoadingPanelOnLoadingFinished;
 
         currencyHudWidget.OnCurrencyParticleMovementFinished += CurrencyHudWidget_OnCurrencyParticleMovementFinished;
     }
 
-    private void LoadingPanel_OnLoadingFinished(bool extended)
+    private void LoadingPanelOnLoadingFinished(bool extended)
     {
         if (!extended/* && !MarketingSDK.RemoteConfig.IsRemoteFetched*/)
         {
@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void GameManager_OnGameStateChanged(GameState oldGameState, GameState newGameState)
+    private void GameManagerOnGameStateChanged(GameState oldGameState, GameState newGameState)
     {
         if (newGameState == GameState.Loading)
         {
@@ -101,7 +101,7 @@ public class UIManager : MonoBehaviour
         panel.ShowPanel();
     }
 
-    private void GameManager_OnChangeScoreBoard(int score)
+    private void GameManagerOnChangeScoreBoard(int score)
     {
         currencyHudWidget.SetCurrencyAmount(score);
     }

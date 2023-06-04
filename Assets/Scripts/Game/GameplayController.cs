@@ -28,19 +28,19 @@ public class GameplayController : MonoBehaviour
         gameCamera.Initialize();
         gridController.Initialize();
         tileManager.Initialize(gridController);
-        tileManager.OnCheckGrid += TileManager_OnCheckgrid;
-        tileManager.OnFinish += TileManager_OnFinish;
-        tileManager.OnChangeScore += TileManager_OnChangeScore;
+        tileManager.OnCheckGrid += TileManagerOnCheckgrid;
+        tileManager.OnFinish += TileManagerOnFinish;
+        tileManager.OnChangeScore += TileManagerOnChangeScore;
         IsInitialized = true;
     }
 
-    private void TileManager_OnChangeScore(int score)
+    private void TileManagerOnChangeScore(int score)
     {
         _currencyScore += GameConfigs.Instance.BlockValue * score;
         OnChangeHighScore?.Invoke(TotalCurrencyScore);
     }
 
-    private void TileManager_OnFinish()
+    private void TileManagerOnFinish()
     {
         FinishGameplay(true);
     }
@@ -73,7 +73,7 @@ public class GameplayController : MonoBehaviour
     }
 
 
-    private void TileManager_OnCheckgrid()
+    private void TileManagerOnCheckgrid()
     {
         gridController.CheckGrid();
     }

@@ -31,7 +31,7 @@ public class FinishSuccessPanel : UIPanel
     {
         base.OnShowPanel();
 
-        currencyRewardText.text = "Continue";//$"{GameManager.gameplayController.TotalCurrencyReward} <sprite=0>";
+        currencyRewardText.text = "Continue";
         _isClosing = false;
     }
 

@@ -32,12 +32,12 @@ public class TileManager : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             var tile = CreateTileController(i);
-            tile.OnDestroyTile += Tile_OnDestroyTile;
+            tile.OnDestroyTile += TileOnDestroyTile;
             ActiveTiles.Add(tile);
         }
     }
 
-    private void Tile_OnDestroyTile(TileController tileController)
+    private void TileOnDestroyTile(TileController tileController)
     {
         ActiveTiles.Remove(tileController);
         Destroy(tileController.gameObject);
