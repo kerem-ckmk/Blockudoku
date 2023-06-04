@@ -64,11 +64,12 @@ public class UIManager : MonoBehaviour
         }
         else if (newGameState == GameState.Gameplay)
         {
-            OnMenuState();
+            currencyHudWidget.gameObject.SetActive(true);
             ShowPanel(gameplayPanel);
         }
         else if (newGameState == GameState.FinishSuccess)
         {
+            currencyHudWidget.gameObject.SetActive(false);
             ShowPanel(finishSuccessPanel);
         }
         else if (newGameState == GameState.FinishFail)
@@ -85,8 +86,11 @@ public class UIManager : MonoBehaviour
     {
         foreach (var panel in allPanels)
         {
-            if (panel.IsShown || forceHide)
-                panel.HidePanel();
+            if (panel.GetType() != typeof(GameplayPanel))
+            {
+                if (panel.IsShown || forceHide)
+                    panel.HidePanel();
+            }
         }
     }
 
@@ -95,12 +99,6 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
         currencyHudWidget.SetCurrencyAmount(0);
         panel.ShowPanel();
-    }
-
-    private void OnMenuState()
-    {
-        // levelText.text = $"Level {gameManager.LinearLevelIndex + 1}";
-        // 
     }
 
     private void GameManager_OnChangeScoreBoard(int score)
