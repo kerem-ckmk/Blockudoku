@@ -37,17 +37,4 @@ public partial class SROptions
     {
         GameManager.Instance.RetryGameplay();
     }
-
-
-    [Category("Cheats")]
-    public void AddMoney_5K()
-    {
-        GameManager.Instance.AddCurrency(5000, null);
-    }
-
-    [Category("Cheats")]
-    public void AddMoney_500K()
-    {
-        GameManager.Instance.AddCurrency(500000, null);
-    }
 }

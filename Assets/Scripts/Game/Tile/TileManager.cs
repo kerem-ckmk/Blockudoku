@@ -13,6 +13,7 @@ public class TileManager : MonoBehaviour
 
     public event Action OnCheckGrid;
     public event Action OnFinish;
+    public event Action<int> OnChangeScore;
     public void Initialize(GridController gridController)
     {
         GridController = gridController;
@@ -41,6 +42,8 @@ public class TileManager : MonoBehaviour
         ActiveTiles.Remove(tileController);
         Destroy(tileController.gameObject);
 
+        OnChangeScore?.Invoke(tileController.BlockList.Count);
+
         if (ActiveTiles.Count == 0)
         {
             ActiveTiles.Clear();
@@ -54,7 +57,6 @@ public class TileManager : MonoBehaviour
             OnFinish?.Invoke();
         }
 
-    
 
     }
 

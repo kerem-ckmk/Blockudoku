@@ -22,7 +22,7 @@ public class CurrencyHudWidget : MonoBehaviour
     public float particleBurstDuration = 0.5f;
 
     [Header("Settings - Particle Movement")]
-    public float particleMoveAcceleration = 25f; 
+    public float particleMoveAcceleration = 25f;
     public float maxParticleSpeed = 2000f;
 
     [Header("Settings - Icon Pop")]
@@ -32,7 +32,7 @@ public class CurrencyHudWidget : MonoBehaviour
     [Header("Settings - Text Increase")]
     public float textIncreaseDuration = 0.5f;
 
-    public int CurrencyAmount 
+    public int CurrencyAmount
     {
         get { return Mathf.RoundToInt(_currencyAmount); }
     }
@@ -58,7 +58,7 @@ public class CurrencyHudWidget : MonoBehaviour
 
     private void OnDisable()
     {
-        foreach(var particle in _currencyAddAnimationParticlePool)
+        foreach (var particle in _currencyAddAnimationParticlePool)
         {
             if (particle.IsActive)
             {
@@ -123,11 +123,6 @@ public class CurrencyHudWidget : MonoBehaviour
 
     public void SetCurrencyAmount(int currencyAmount)
     {
-        foreach (var particle in _currencyAddAnimationParticlePool)
-        {
-            particle.SetActive(false);
-        }
-
         _currencyAmountTextTarget = currencyAmount;
 
         UpdateCurrencyAmount(currencyAmount);
@@ -136,7 +131,7 @@ public class CurrencyHudWidget : MonoBehaviour
     private void UpdateCurrencyAmount(float currencyAmount)
     {
         _currencyAmount = currencyAmount;
-        currencyAmountText.text = CurrencyAmount.ToString();
+        currencyAmountText.text = CurrencyAmount.KiloFormatNumber();
     }
 
     public void AddCurrencyLightMode(int addAmount)
@@ -330,7 +325,7 @@ internal class CurrencyHudParticle
             _velocity += destinationDirection * _moveAcceleration * Time.deltaTime;
             _velocity = Vector2.ClampMagnitude(_velocity, _maxSpeed);
         }
-        
+
         rectTransform.anchoredPosition = rectTransform.anchoredPosition + _velocity * Time.deltaTime;
 
         var newDestinationDirection = (_destination - rectTransform.anchoredPosition).normalized;

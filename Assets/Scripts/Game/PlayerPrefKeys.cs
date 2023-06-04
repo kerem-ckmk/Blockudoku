@@ -4,4 +4,5 @@
 
     public const string LinearLevelIndex = "LinearLevelIndex";
     public const string PlayerCurrencyAmount = "PlayerCurrencyAmount";
+    public const string PlayerHighScore = "PlayerHighScore";
 }

@@ -12,12 +12,15 @@ public class GameplayController : MonoBehaviour
     public bool IsInitialized { get; private set; }
     public bool IsActive { get; private set; }
 
-    public int TotalCurrencyReward
+    public int TotalCurrencyScore
     {
-        get { return 100; }
+        get { return _currencyScore; }
     }
 
+    private int _currencyScore;
+
     public Action<bool> OnGameplayFinished;
+    public Action<int> OnChangeHighScore;
 
     public void Initialize()
     {
@@ -27,7 +30,14 @@ public class GameplayController : MonoBehaviour
         tileManager.Initialize(gridController);
         tileManager.OnCheckGrid += TileManager_OnCheckgrid;
         tileManager.OnFinish += TileManager_OnFinish;
+        tileManager.OnChangeScore += TileManager_OnChangeScore;
         IsInitialized = true;
+    }
+
+    private void TileManager_OnChangeScore(int score)
+    {
+        _currencyScore += GameConfigs.Instance.BlockValue * score;
+        OnChangeHighScore?.Invoke(TotalCurrencyScore);
     }
 
     private void TileManager_OnFinish()
@@ -44,6 +54,7 @@ public class GameplayController : MonoBehaviour
 
     public void UnloadGameplay()
     {
+        _currencyScore = 0;
         levelManager.UnloadLevel();
         gridController.Unload();
         tileManager.Unload();

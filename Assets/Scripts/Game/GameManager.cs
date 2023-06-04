@@ -44,17 +44,17 @@ public class GameManager : MonoBehaviour
         set { PlayerPrefs.SetInt(PlayerPrefKeys.LinearLevelIndex, value); }
     }
 
-    public int PlayerCurrencyAmount
+    public int PlayerHighScore
     {
-        get { return PlayerPrefs.GetInt(PlayerPrefKeys.PlayerCurrencyAmount, GameConfigs.Instance.StartingMoney); }
-        set { PlayerPrefs.SetInt(PlayerPrefKeys.PlayerCurrencyAmount, value); }
+        get { return PlayerPrefs.GetInt(PlayerPrefKeys.PlayerHighScore, 0); }
+        set { PlayerPrefs.SetInt(PlayerPrefKeys.PlayerHighScore, value); }
     }
 
     private float _lastHapticTime;
     private float _lastSoundTime;
 
     public event Action<GameState /*Old*/, GameState /*New*/> OnGameStateChanged;
-    public event Action<int, int, Vector2?> OnCurrencyChanged;
+    public event Action<int> OnChangeScoreBoard;
 
     private void Awake()
     {
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
         }
 
         gameplayController.OnGameplayFinished += GameplayController_OnGameplayFinished;
-
+        gameplayController.OnChangeHighScore += GameplayController_OnChangeHighScore;
         DG.Tweening.DOTween.SetTweensCapacity(500, 500);
 
         VibrationSettingChanged(IsVibrationEnabled);
@@ -146,6 +146,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void GameplayController_OnChangeHighScore(int score)
+    {
+        PlayerHighScore = score > PlayerHighScore ? score : PlayerHighScore;
+        OnChangeScoreBoard?.Invoke(score);
+    }
+
     public void FullyFinishGameplay()
     {
         LinearLevelIndex += 1;
@@ -164,29 +170,6 @@ public class GameManager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
-    }
-
-    public void AddCurrency(int currencyAmount, Vector3 worldPosition)
-    {
-        Vector2? screenPos = gameplayController.gameCamera.GameCamera.WorldToScreenPoint(worldPosition);
-        AddCurrency(currencyAmount, screenPos);
-    }
-
-    public void AddCurrency(int currencyAmount, Vector2? screenPosition = null)
-    {
-        if (currencyAmount == 0)
-            return;
-
-        PlayerCurrencyAmount += currencyAmount;
-        OnCurrencyChanged?.Invoke(PlayerCurrencyAmount, currencyAmount, screenPosition);
-    }
-
-    private void LateUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            AddCurrency(GameConfigs.Instance.AddCurrencyCheatAmount);
-        }
     }
 
     public static void DoHaptic(HapticPatterns.PresetType hapticType, bool dominate = false)
@@ -219,7 +202,7 @@ public enum GameState
 {
     None,
     Loading,
-   // Menu,
+    // Menu,
     Gameplay,
     FinishSuccess,
     FinishFail

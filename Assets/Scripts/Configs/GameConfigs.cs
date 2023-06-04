@@ -16,20 +16,7 @@ public class GameConfigs : ScriptableObject
     public float TileMouseDragOffset = 50f;
     public float TileDragSpeed = 10f;
     public float TileDragScale = 1.72f;
-
-    [Header("Upgrades - Visuals")]
-    public Sprite StartingLevelBackground;
-    public Sprite StartingLevelIcon;
-    public Sprite IncomeBackground;
-    public Sprite IncomeIcon;
-
-    [Header("Upgrades - Prices")]
-    public int StartingLevelUpgradePriceMultiplier = 100;
-    public int IncomeUpgradePriceMultiplier = 100;
-
-    [Header("Upgrades - Functionality")]
-    public int StartingLevelMultiplier = 1;
-    public float[] IncomeUpgradeMultipliers;
+    public int BlockValue = 50;
 
     [Header("Haptic")]
     public float HapticIntervalLimit = 0.15f;

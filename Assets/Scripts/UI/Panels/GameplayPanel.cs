@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 public class GameplayPanel : UIPanel
 {
     [Header("References - UI")]
     public Button settingsButton;
     public SettingsPopup settingsPopup;
+    public TextMeshProUGUI highScoreTMP;
 
     private void Awake()
     {
@@ -22,6 +24,8 @@ public class GameplayPanel : UIPanel
     protected override void OnShowPanel()
     {
         base.OnShowPanel();
+
+        highScoreTMP.text = "High Score: " + GameManager.PlayerHighScore.KiloFormatNumber();
     }
 
     protected override void OnHidePanel()

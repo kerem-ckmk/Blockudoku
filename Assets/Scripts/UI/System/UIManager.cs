@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class UIManager : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class UIManager : MonoBehaviour
         HideAllPanels(true);
 
         gameManager.OnGameStateChanged += GameManager_OnGameStateChanged;
-        gameManager.OnCurrencyChanged += GameManager_OnCurrencyChanged;
+        gameManager.OnChangeScoreBoard += GameManager_OnChangeScoreBoard;
         loadingPanel.OnLoadingFinished += LoadingPanel_OnLoadingFinished;
 
         currencyHudWidget.OnCurrencyParticleMovementFinished += CurrencyHudWidget_OnCurrencyParticleMovementFinished;
@@ -92,26 +93,19 @@ public class UIManager : MonoBehaviour
     private void ShowPanel(UIPanel panel)
     {
         HideAllPanels();
-
+        currencyHudWidget.SetCurrencyAmount(0);
         panel.ShowPanel();
     }
 
     private void OnMenuState()
     {
-        levelText.text = $"Level {gameManager.LinearLevelIndex + 1}";
-        currencyHudWidget.SetCurrencyAmount(gameManager.PlayerCurrencyAmount);
+        // levelText.text = $"Level {gameManager.LinearLevelIndex + 1}";
+        // 
     }
 
-    private void GameManager_OnCurrencyChanged(int totalCurrency, int changeAmount, Vector2? popScreenPos)
+    private void GameManager_OnChangeScoreBoard(int score)
     {
-        if (changeAmount > 0 && popScreenPos != null)
-        {
-            currencyHudWidget.AddCurrencyWithAnimation(changeAmount, popScreenPos.Value);
-        }
-        else
-        {
-            currencyHudWidget.SetCurrencyAmount(totalCurrency);
-        }
+        currencyHudWidget.SetCurrencyAmount(score);
     }
 
     private void CurrencyHudWidget_OnCurrencyParticleMovementFinished()

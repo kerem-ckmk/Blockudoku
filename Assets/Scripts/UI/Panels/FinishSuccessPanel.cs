@@ -31,7 +31,7 @@ public class FinishSuccessPanel : UIPanel
     {
         base.OnShowPanel();
 
-        currencyRewardText.text = $"{GameManager.gameplayController.TotalCurrencyReward} <sprite=0>";
+        currencyRewardText.text = "Continue";//$"{GameManager.gameplayController.TotalCurrencyReward} <sprite=0>";
         _isClosing = false;
     }
 
@@ -47,13 +47,13 @@ public class FinishSuccessPanel : UIPanel
 
         _isClosing = true;
 
-        Vector2? popPoint = _canvasCamera.WorldToScreenPoint(continueButtonCurrencyIcon.position);
-        GameManager.AddCurrency(GameManager.gameplayController.TotalCurrencyReward, popPoint);
+        //Vector2? popPoint = _canvasCamera.WorldToScreenPoint(continueButtonCurrencyIcon.position);
+        //GameManager.AddCurrency(GameManager.gameplayController.TotalCurrencyReward, popPoint);
 
-        DOVirtual.DelayedCall(2f, () =>
-        {
-            GameManager.FullyFinishGameplay();
-        });
+        //  DOVirtual.DelayedCall(2f, () =>
+        // {
+        GameManager.FullyFinishGameplay();
+        // });
     }
 
     private void LateUpdate()
